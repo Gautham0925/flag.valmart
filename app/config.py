@@ -7,12 +7,25 @@ def _bool(name, default):
     return os.environ.get(name, "1" if default else "0").lower() in ("1", "true", "yes")
 
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./data/flagdesk.db")
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = "postgresql+psycopg://" + DATABASE_URL[len("postgres://"):]
-elif DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = "postgresql+psycopg://" + DATABASE_URL[len("postgresql://"):]
+def _database_url():
+    raw = os.environ.get("DATABASE_URL", "").strip().strip("\"'").strip()
+    if raw.lower().startswith("psql "):
+        raw = raw[5:].strip().strip("\"'").strip()
+    if not raw:
+        return "sqlite:///./data/flagdesk.db"
+    if raw.startswith("postgres://"):
+        raw = "postgresql+psycopg://" + raw[len("postgres://"):]
+    elif raw.startswith("postgresql://"):
+        raw = "postgresql+psycopg://" + raw[len("postgresql://"):]
+    try:
+        from sqlalchemy.engine import make_url
+        make_url(raw)
+    except Exception:
+        raise RuntimeError("DATABASE_URL is not valid. Use the plain connection string, like postgresql://user:password@host:5432/dbname (no quotes, no psql prefix, no <placeholders>).")
+    return raw
 
+
+DATABASE_URL = _database_url()
 
 def _secret():
     env = os.environ.get("SECRET_KEY")
