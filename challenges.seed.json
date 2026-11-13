@@ -1,0 +1,14 @@
+[
+ {"id":"LAB-01","title":"Who Works Here?","category":"Authentication","points":100,"description":"The login page answers differently depending on who you ask about. Find the hidden internal account and read what its response gives away.","flag":"FLAG{U$@RNAM€_€NUM€RATION_001}"},
+ {"id":"LAB-02","title":"Lost Password","category":"Authentication","points":100,"description":"The password reset form is too helpful. Identify the hidden recovery account and collect its ticket reference.","flag":"FLAG{PA$$WORD_R€$€T_€NUM_002}"},
+ {"id":"LAB-03","title":"Somebody Else’s Order","category":"Access Control","points":150,"description":"Orders and invoices belong to customers, but does the server check? Find the order with the objective data in its gift message.","flag":"FLAG{IDOR_ORD€R_ACC€$$_003}"},
+ {"id":"LAB-04","title":"Zombie Session","category":"Session","points":150,"description":"Log out, change your password, then see whether your old session still has a pulse.","flag":"FLAG{BROK€N_AUTH_004}"},
+ {"id":"LAB-05","title":"Promote Yourself","category":"Access Control","points":150,"description":"Update your own profile and see what else the server is willing to accept. Then visit the admin overview.","flag":"FLAG{V€RTICAL_PRIV_€$C_005}"},
+ {"id":"LAB-06","title":"Delivery Notes","category":"Access Control","points":150,"description":"Addresses are fetched by user id. Read the delivery notes on another user’s Office address.","flag":"FLAG{HORIZONTAL_PRIV_€$C_006}"},
+ {"id":"LAB-07","title":"Echo Chamber","category":"XSS","points":100,"description":"The legacy search page repeats what you give it. Make it run your script and read the cookie.","flag":"FLAG{R€FL€CT€D_X$$_007}"},
+ {"id":"LAB-08","title":"Poisoned Review","category":"XSS","points":150,"description":"Leave a product review that fires for every visitor and read the cookie.","flag":"FLAG{$TOR€D_X$$_008}"},
+ {"id":"LAB-09","title":"Hash Fragment","category":"XSS","points":200,"description":"The flash sale page trusts its own URL. The server never sees your payload, so look at the client code.","flag":"FLAG{DOM_BA$€D_X$$_009}"},
+ {"id":"LAB-10","title":"Search Is Hungry","category":"Injection","points":250,"description":"Only one search parameter reaches the database unsafely. Find it and pull data from the hidden table.","flag":"FLAG{$QL_INJ€CTION_010}"},
+ {"id":"LAB-11","title":"Public Key, Private Door","category":"JWT","points":300,"description":"The server publishes its public key. Persuade it to treat that key as something else and open the vault.","flag":"FLAG{JWT_K€Y_CONFU$ION_011}"},
+ {"id":"LAB-12","title":"Halfway There","category":"MFA","points":250,"description":"Stop at the OTP step and see which endpoints still answer to your partial token.","flag":"FLAG{HALF_AUTH_BYPASS_012}"}
+]

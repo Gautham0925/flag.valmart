@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: flagdesk
+      POSTGRES_PASSWORD: flagdesk_local
+      POSTGRES_DB: flagdesk
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flagdesk"]
+      interval: 3s
+      retries: 20
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://flagdesk:flagdesk_local@db:5432/flagdesk
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+volumes:
+  pgdata:

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flag Submission</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-md border-bottom border-secondary-subtle sticky-top bg-body">
+<div class="container">
+<a class="navbar-brand fw-semibold" href="#"><i class="bi bi-flag-fill text-accent me-2"></i><span id="event-name">CTF</span></a>
+<ul class="navbar-nav me-auto flex-row gap-3" id="tabs" hidden>
+<li class="nav-item"><a class="nav-link" data-tab="challenges" href="#challenges">Challenges</a></li>
+<li class="nav-item"><a class="nav-link" data-tab="scoreboard" href="#scoreboard">Scoreboard</a></li>
+<li class="nav-item" id="admin-tab" hidden><a class="nav-link" data-tab="admin" href="#admin">Admin</a></li>
+</ul>
+<div class="d-flex align-items-center gap-3" id="userbox" hidden>
+<span class="badge text-bg-dark border border-secondary-subtle fs-6 mono" id="score-badge"></span>
+<span class="text-secondary" id="whoami"></span>
+<button class="btn btn-sm btn-outline-secondary" id="logout">Sign out</button>
+</div>
+</div>
+</nav>
+<main class="container py-4">
+<section id="view-auth" hidden>
+<div class="row justify-content-center"><div class="col-md-6 col-lg-5">
+<div class="card shadow-sm"><div class="card-body p-4">
+<ul class="nav nav-pills mb-4" id="auth-pills">
+<li class="nav-item"><button class="nav-link active" data-mode="login">Sign in</button></li>
+<li class="nav-item"><button class="nav-link" data-mode="register" id="register-pill">Register</button></li>
+</ul>
+<form id="auth-form" autocomplete="on">
+<div class="mb-3"><label class="form-label">Username</label><input class="form-control" id="f-user" name="username" minlength="3" maxlength="32" required autocomplete="username"></div>
+<div class="mb-3"><label class="form-label">Password</label><input class="form-control" id="f-pass" name="password" type="password" minlength="1" required autocomplete="current-password"></div>
+<div class="mb-3" id="code-row" hidden><label class="form-label">Event code</label><input class="form-control" id="f-code" name="code"></div>
+<div class="alert alert-danger py-2" id="auth-error" hidden></div>
+<button class="btn btn-accent w-100" id="auth-submit" type="submit">Sign in</button>
+</form>
+</div></div>
+</div></div>
+</section>
+
+<section id="view-challenges" hidden>
+<div class="d-flex flex-wrap justify-content-between align-items-end mb-3 gap-3">
+<div><h1 class="h3 mb-1">Challenges</h1><p class="text-secondary mb-0">Exploit a lab, grab the flag, submit it here.</p></div>
+<div class="progress-wrap"><div class="small text-secondary mb-1" id="progress-label"></div><div class="progress" style="height:8px"><div class="progress-bar bg-accent" id="progress-bar" style="width:0"></div></div></div>
+</div>
+<div class="row g-3" id="challenge-grid"></div>
+</section>
+
+<section id="view-scoreboard" hidden>
+<div class="d-flex justify-content-between align-items-end mb-3"><div><h1 class="h3 mb-1">Scoreboard</h1><p class="text-secondary mb-0">Updates every few seconds.</p></div><span class="small text-secondary" id="board-updated"></span></div>
+<div class="card"><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead><tr><th style="width:80px">Rank</th><th>Player</th><th class="text-end">Solved</th><th class="text-end">Score</th></tr></thead><tbody id="board-body"></tbody></table></div></div>
+</section>
+
+<section id="view-admin" hidden>
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2"><h1 class="h3 mb-0">Admin</h1>
+<div class="d-flex gap-2"><a class="btn btn-sm btn-outline-secondary" href="/api/admin/export.csv"><i class="bi bi-download me-1"></i>Export CSV</a><button class="btn btn-sm btn-outline-danger" id="reset-all">Reset all scores</button></div></div>
+<div class="row g-3 mb-4" id="admin-stats"></div>
+<h2 class="h5">Challenges</h2>
+<div class="card mb-4"><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>ID</th><th>Title</th><th style="width:120px">Points</th><th>Visible</th><th style="width:300px">New flag</th><th></th></tr></thead><tbody id="admin-challenges"></tbody></table></div></div>
+<h2 class="h5">Players</h2>
+<div class="card mb-4"><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Username</th><th class="text-end">Solved</th><th class="text-end">Score</th><th></th></tr></thead><tbody id="admin-users"></tbody></table></div></div>
+<h2 class="h5">Recent submissions</h2>
+<div class="card"><div class="table-responsive"><table class="table table-sm align-middle mb-0"><thead><tr><th>Time</th><th>Player</th><th>Lab</th><th>Result</th><th>Submitted</th></tr></thead><tbody id="admin-subs" class="mono"></tbody></table></div></div>
+</section>
+</main>
+
+<div class="modal fade" id="flag-modal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+<div class="modal-header"><div><div class="small text-accent mono" id="m-id"></div><h5 class="modal-title" id="m-title"></h5></div><button class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+<div class="d-flex gap-2 mb-3"><span class="badge text-bg-secondary" id="m-cat"></span><span class="badge text-bg-dark border border-secondary-subtle mono" id="m-points"></span><span class="badge text-bg-dark border border-secondary-subtle" id="m-solves"></span></div>
+<p id="m-desc"></p>
+<form id="flag-form">
+<div class="input-group"><input class="form-control mono" id="m-flag" placeholder="FLAG{...}" autocomplete="off" spellcheck="false" maxlength="200" required><button class="btn btn-accent" id="m-submit" type="submit">Submit</button></div>
+</form>
+<div class="alert mt-3 mb-0" id="m-result" hidden></div>
+</div>
+</div></div></div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3"><div class="toast align-items-center border-0" id="toast" role="alert"><div class="d-flex"><div class="toast-body" id="toast-body"></div><button class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

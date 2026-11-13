@@ -1,0 +1,26 @@
+databases:
+  - name: flagdesk-db
+    plan: free
+services:
+  - type: web
+    name: flagdesk
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: flagdesk-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: EVENT_CODE
+        sync: false
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: EVENT_NAME
+        value: VULNMARKET CTF
